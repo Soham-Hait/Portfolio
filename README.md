@@ -1,5 +1,5 @@
 # 🚀 Live Demo  
-[Deployed Site]([https://your-deployment-link-here.com](https://portfolio-azure-zeta-16.vercel.app/))
+[Deployed Site]([https://portfolio-azure-zeta-16.vercel.app/])
 
 # 📁 Portfolio Website
 
