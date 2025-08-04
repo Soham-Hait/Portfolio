@@ -1,13 +1,13 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Github, Linkedin, Mail, GraduationCap, Code, Award, ExternalLink } from "lucide-react" // Removed Eye icon
-import { downloadResumeAsPDF } from "@/utils/downloadResume" // Removed viewResumeInNewTab
+import { Github, Linkedin, Mail, GraduationCap, Code, Award, ExternalLink } from "lucide-react"
+import { downloadResumeAsPDF } from "@/utils/downloadResume"
 
 export default function Portfolio() {
   const [displayedText, setDisplayedText] = useState("")
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [scrollPosition, setScrollPosition] = useState(0)
+
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
 
   // Refs for each section
@@ -30,20 +30,6 @@ export default function Portfolio() {
       return () => clearTimeout(timeout)
     }
   }, [currentIndex, aboutText])
-
-  // Auto-scroll effect for certifications
-  useEffect(() => {
-    const scrollInterval = setInterval(() => {
-      setScrollPosition((prev) => {
-        const cardWidth = 216 // 192px card + 24px gap
-        const totalWidth = cardWidth * certifications.length
-        const newPosition = prev + 1
-        return newPosition >= totalWidth ? 0 : newPosition
-      })
-    }, 50) // Adjust speed here (lower = faster)
-
-    return () => clearInterval(scrollInterval)
-  }, [])
 
   // Intersection Observer for scroll animations
   useEffect(() => {
@@ -78,6 +64,24 @@ export default function Portfolio() {
   }, [])
 
   const projects = [
+    {
+      title: "Home Tree - Family Management & Organization App",
+      description:
+        "Built a feature-rich frontend using **Next.js**, **TypeScript**, and **Tailwind CSS**, leveraging shadcn components and lucide-react icons to create a clean and modular UI. Designed a scalable backend with **Node.js**, managing API endpoints for task, user, and project operations. Integrated **JWT-based** authentication and **bcrypt** password hashing for secure login functionality. Employed **MongoDB** as the primary database to store and retrieve user data, notes, and organizational structures efficiently.",
+      tech: [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Node.js",
+        "MongoDB",
+        "JWT",
+        "bcrypt",
+        "shadcn/ui",
+        "lucide-react",
+      ],
+      date: "July 2025",
+      githubUrl: "https://github.com/Soham-Hait/Home-Tree",
+    },
     {
       title: "CineTix - Movie Booking Website",
       description:
@@ -121,7 +125,7 @@ export default function Portfolio() {
       title: "Introduction to DevOps",
       issuer: "Professional Certification",
       date: "2024",
-      certificateUrl: "https://drive.google.com/file/d/1fVB2D0TdPZSnGCKNYi8iFQ2P3p0pVkI9/view?usp=sharing",
+      certificateUrl: "https://drive.google.com/file/d/1fVB2D0TdPZSnGCKNYi8iFQ2P3p0pVkI9/view?usp=drive_link",
     },
     {
       title: "Introduction to Front-End Development",
@@ -392,53 +396,99 @@ export default function Portfolio() {
             <Code className="w-8 h-8 text-orange-400" />
             <h2 className="text-4xl font-bold text-white">Projects</h2>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <div
-                key={index}
-                className={`bg-red-900/20 backdrop-blur-lg rounded-2xl p-6 border border-red-500/30 hover:border-orange-500/50 transition-all duration-500 hover:transform hover:scale-105 ${
-                  visibleSections.has("projects") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: `${index * 200}ms` }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-white">{project.title}</h3>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-orange-300">{project.date}</span>
+          <div className="overflow-hidden">
+            <div className="flex gap-8 animate-[scroll-projects_60s_linear_infinite]">
+              {" "}
+              {/* Applied specific animation */}
+              {/* First set of projects */}
+              {projects.map((project, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 w-96 bg-red-900/20 backdrop-blur-lg rounded-2xl p-6 border border-red-500/30 hover:border-orange-500/50 transition-all duration-300 hover:transform hover:scale-105"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold text-white">{project.title}</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-orange-300">{project.date}</span>
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-orange-400 hover:text-orange-300 transition-colors"
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                      </a>
+                    </div>
+                  </div>
+                  <p className="text-gray-200 mb-4 leading-relaxed">{renderTextWithBold(project.description)}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tech.map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className="px-3 py-1 bg-amber-600/30 rounded-full text-sm text-amber-200 border border-amber-400/40"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-center">
                     <a
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-orange-400 hover:text-orange-300 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 bg-orange-700 hover:bg-orange-600 rounded-full transition-colors duration-300 group text-sm"
                     >
-                      <ExternalLink className="w-5 h-5" />
+                      <Github className="w-4 h-4 group-hover:animate-spin" />
+                      <span className="font-medium">View on GitHub</span>
                     </a>
                   </div>
                 </div>
-                <p className="text-gray-200 mb-4 leading-relaxed">{renderTextWithBold(project.description)}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((tech, techIndex) => (
-                    <span
-                      key={techIndex}
-                      className="px-3 py-1 bg-amber-600/30 rounded-full text-sm text-amber-200 border border-amber-400/40"
+              ))}
+              {/* Duplicate set for seamless loop */}
+              {projects.map((project, index) => (
+                <div
+                  key={`duplicate-${index}`}
+                  className="flex-shrink-0 w-96 bg-red-900/20 backdrop-blur-lg rounded-2xl p-6 border border-red-500/30 hover:border-orange-500/50 transition-all duration-300 hover:transform hover:scale-105"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold text-white">{project.title}</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-orange-300">{project.date}</span>
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-orange-400 hover:text-orange-300 transition-colors"
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                      </a>
+                    </div>
+                  </div>
+                  <p className="text-gray-200 mb-4 leading-relaxed">{renderTextWithBold(project.description)}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tech.map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className="px-3 py-1 bg-amber-600/30 rounded-full text-sm text-amber-200 border border-amber-400/40"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2 bg-orange-700 hover:bg-orange-600 rounded-full transition-colors duration-300 group text-sm"
                     >
-                      {tech}
-                    </span>
-                  ))}
+                      <Github className="w-4 h-4 group-hover:animate-spin" />
+                      <span className="font-medium">View on GitHub</span>
+                    </a>
+                  </div>
                 </div>
-                <div className="flex items-center justify-center">
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-orange-700 hover:bg-orange-600 rounded-full transition-colors duration-300 group text-sm"
-                  >
-                    <Github className="w-4 h-4 group-hover:animate-spin" />
-                    <span className="font-medium">View on GitHub</span>
-                  </a>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -457,7 +507,9 @@ export default function Portfolio() {
             <h2 className="text-4xl font-bold text-white">Certifications</h2>
           </div>
           <div className="overflow-hidden">
-            <div className="flex gap-6 animate-scroll">
+            <div className="flex gap-6 animate-[scroll-certifications_60s_linear_infinite]">
+              {" "}
+              {/* Applied specific animation */}
               {/* First set of certifications */}
               {certifications.map((cert, index) => (
                 <a
